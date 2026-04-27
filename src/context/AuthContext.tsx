@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { User } from "../types/auth";
 
@@ -61,6 +62,8 @@ export const AuthProvider = ({ children }: any) => {
 
     setToken(null);
     setUser(null);
+
+    router.replace("/");
   };
 
   return (

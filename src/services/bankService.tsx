@@ -14,7 +14,7 @@ export const getTransfers = async (): Promise<Transfer[]> => {
   const res = await api.get<Transfer[]>(
     "https://n0qaa2fx3c.execute-api.us-east-1.amazonaws.com/default/transferList"
   );
-  return res.data;
+  return res.data?.transfers;
 };
 
 export const makeTransfer = async (body: TransferRequest ) => {
