@@ -1,9 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { User } from "../types/auth";
 
 interface AuthContextType {
   token: string | null;
-  login: (token: string) => Promise<void>;
+  user: User | null;
+  login: (token: string, user: User) => Promise<void>;
   logout: () => Promise<void>;
   resetTimer: () => void;
   loading: boolean;
@@ -11,20 +13,27 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-const INACTIVITY_TIME = 15 * 60 * 1000; // 15 min -- esto se puede cambiar si es necesario
+const INACTIVITY_TIME = 15 * 60 * 1000;
 
 export const AuthProvider = ({ children }: any) => {
   const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    loadToken();
+    loadSession();
   }, []);
 
-  const loadToken = async () => {
-    const stored = await AsyncStorage.getItem("token");
-    if (stored) setToken(stored);
+  const loadSession = async () => {
+    const storedToken = await AsyncStorage.getItem("token");
+    const storedUser = await AsyncStorage.getItem("user");
+
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(JSON.parse(storedUser));
+    }
+
     setLoading(false);
   };
 
@@ -32,24 +41,30 @@ export const AuthProvider = ({ children }: any) => {
     if (timer.current) clearTimeout(timer.current);
 
     timer.current = setTimeout(() => {
-      console.log("Sesión cerrada por inactividad");
       logout();
     }, INACTIVITY_TIME);
   };
 
-  const login = async (newToken: string) => {
+  const login = async (newToken: string, newUser: User) => {
     await AsyncStorage.setItem("token", newToken);
+    await AsyncStorage.setItem("user", JSON.stringify(newUser));
+
     setToken(newToken);
+    setUser(newUser);
+
     resetTimer();
   };
 
   const logout = async () => {
     await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("user");
+
     setToken(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, resetTimer, loading }}>
+    <AuthContext.Provider value={{ token, user, login, logout, resetTimer, loading }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,12 +1,13 @@
 import { colors } from "@/assets/theme/colors";
+import { BalanceResponse } from "@/src/types/bank";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function BalanceCard({ balance, currency }: any) {
+export default function BalanceCard({ accountBalance , currency }: BalanceResponse) {
   return (
     <View style={styles.card}>
       <Text style={styles.label}>Saldo disponible</Text>
       <Text style={styles.amount}>
-        {currency} {balance.toFixed(2)}
+        {currency} {accountBalance}
       </Text>
     </View>
   );
