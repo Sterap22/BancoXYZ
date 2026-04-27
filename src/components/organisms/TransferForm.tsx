@@ -5,6 +5,7 @@ import { TransferRequest } from "@/src/types/bank";
 import { Formik } from "formik";
 import { StyleSheet, Text, View } from "react-native";
 import * as Yup from "yup";
+import AppHeader from "./AppHeader";
 
 const schema = Yup.object().shape({
   value: Yup.number()
@@ -19,7 +20,9 @@ export default function TransferForm({ onSubmit }: any) {
 
 
   return (
+    
     <View style={styles.container}>
+      <AppHeader title="Transferir" showBack />
       <Text style={styles.header}>Transferir dinero</Text>
 
       <View style={styles.card}>
