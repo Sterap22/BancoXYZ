@@ -11,7 +11,7 @@ export default function TransferScreen() {
       const res = await makeTransfer(values);
 
       Alert.alert(
-      "✅ Éxito",
+      "Éxito",
       "Transferencia realizada",
       [
         {
