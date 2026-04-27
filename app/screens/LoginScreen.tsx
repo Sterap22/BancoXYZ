@@ -11,12 +11,11 @@ export default function LoginScreen({ navigation }: any) {
 
   const handleLogin = async (values: LoginRequest) => {
     try {
-      
       const data = await loginService(values);
 
-      if (!data?.token) return;
+      if (!data?.token || !data?.user) return;
 
-      await login(data.token);
+      await login(data.token, data.user);
     } catch (error) {
       console.log(error);
     }

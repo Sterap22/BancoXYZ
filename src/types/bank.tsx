@@ -1,6 +1,6 @@
 export interface BalanceResponse {
-  currency: string;
-  accountBalance: number;
+  currency: string | '';
+  accountBalance: number | 0;
 }
 
 export interface Transfer {
@@ -11,4 +11,11 @@ export interface Transfer {
     document: string;
     name: string;
   };
+}
+
+export interface TransferRequest {
+  value: number | 0;
+  currency: string | '';
+  payeerDocument: string | '';
+  transferDate: string | '';
 }
